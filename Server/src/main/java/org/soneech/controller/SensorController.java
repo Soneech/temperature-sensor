@@ -2,7 +2,8 @@ package org.soneech.controller;
 
 import jakarta.validation.Valid;
 import org.soneech.dto.SensorRequestDTO;
-import org.soneech.exception.SensorNotCreatedException;
+import org.soneech.exception.SensorException;
+import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.Sensor;
 import org.soneech.service.SensorService;
 import org.soneech.util.SensorValidator;
@@ -18,21 +19,23 @@ import static org.soneech.util.ErrorUtils.prepareFieldsErrorMessage;
 public class SensorController {
     private final SensorService sensorService;
     private final SensorValidator sensorValidator;
+    private final DefaultMapper mapper;
 
     @Autowired
-    public SensorController(SensorService sensorService, SensorValidator sensorValidator) {
+    public SensorController(SensorService sensorService, SensorValidator sensorValidator, DefaultMapper mapper) {
         this.sensorService = sensorService;
         this.sensorValidator = sensorValidator;
+        this.mapper = mapper;
     }
 
     @PostMapping("/registration")
     public ResponseEntity<Sensor> registerSensor(@RequestBody @Valid SensorRequestDTO sensorRequestDTO,
                                                  BindingResult bindingResult) {
-        Sensor sensor = sensorService.convertToSensor(sensorRequestDTO);
+        Sensor sensor = mapper.convertToSensor(sensorRequestDTO);
         sensorValidator.validate(sensor, bindingResult);
 
         if (bindingResult.hasErrors())
-            throw new SensorNotCreatedException(prepareFieldsErrorMessage(bindingResult));
+            throw new SensorException(prepareFieldsErrorMessage(bindingResult));
 
         return ResponseEntity.ok(sensorService.save(sensor));
     }

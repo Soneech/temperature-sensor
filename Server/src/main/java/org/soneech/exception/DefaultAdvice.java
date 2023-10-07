@@ -9,7 +9,12 @@ import java.util.Map;
 @ControllerAdvice
 public class DefaultAdvice {
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleException(SensorNotCreatedException exception) {
+    public ResponseEntity<Map<String, String>> handleSensorException(SensorException exception) {
+        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> handleMeasurementException(MeasurementException exception) {
         return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
     }
 }

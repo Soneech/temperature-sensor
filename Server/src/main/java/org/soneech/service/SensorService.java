@@ -2,6 +2,7 @@ package org.soneech.service;
 
 import org.modelmapper.ModelMapper;
 import org.soneech.dto.SensorRequestDTO;
+import org.soneech.exception.SensorException;
 import org.soneech.model.Sensor;
 import org.soneech.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,12 @@ public class SensorService {
         return sensorRepository.findAll();
     }
 
-    public Optional<Sensor> findById(Long id) {
-        return sensorRepository.findById(id);
+    public Sensor findById(Long id) {
+        Optional<Sensor> foundSensor = sensorRepository.findById(id);
+        if (foundSensor.isEmpty())
+            throw new SensorException("сенсор с таким id не зарегистрирован");
+
+        return foundSensor.get();
     }
 
     public Optional<Sensor> findByName(String name) {
@@ -35,9 +40,5 @@ public class SensorService {
 
     public Sensor save(Sensor sensor) {
         return sensorRepository.save(sensor);
-    }
-
-    public Sensor convertToSensor(SensorRequestDTO sensorRequestDTO) {
-        return modelMapper.map(sensorRequestDTO, Sensor.class);
     }
 }
