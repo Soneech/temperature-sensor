@@ -2,6 +2,7 @@ package org.soneech.controller;
 
 import jakarta.validation.Valid;
 import org.soneech.dto.SensorRequestDTO;
+import org.soneech.dto.SensorResponseDTO;
 import org.soneech.exception.SensorException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.Sensor;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.soneech.util.ErrorUtils.prepareFieldsErrorMessage;
 
@@ -26,6 +29,16 @@ public class SensorController {
         this.sensorService = sensorService;
         this.sensorValidator = sensorValidator;
         this.mapper = mapper;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SensorResponseDTO>> getAllSensors() {
+        return ResponseEntity.ok(sensorService.findAll().stream().map(mapper::convertSensorToDTO).toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SensorResponseDTO> getSensorById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(mapper.convertSensorToDTO(sensorService.findById(id)));
     }
 
     @PostMapping("/registration")

@@ -1,9 +1,8 @@
 package org.soneech.service;
 
-import org.modelmapper.ModelMapper;
-import org.soneech.dto.SensorRequestDTO;
 import org.soneech.exception.SensorException;
 import org.soneech.model.Sensor;
+import org.soneech.repository.MeasurementRepository;
 import org.soneech.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,13 @@ import java.util.Optional;
 @Service
 public class SensorService {
     private final SensorRepository sensorRepository;
-    private final ModelMapper modelMapper;
+    private final MeasurementRepository measurementRepository;
+
 
     @Autowired
-    public SensorService(SensorRepository sensorRepository, ModelMapper modelMapper) {
+    public SensorService(SensorRepository sensorRepository, MeasurementRepository measurementRepository) {
         this.sensorRepository = sensorRepository;
-        this.modelMapper = modelMapper;
+        this.measurementRepository = measurementRepository;
     }
 
     public List<Sensor> findAll() {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class MeasurementService {
     @Autowired
     public MeasurementService(MeasurementRepository measurementRepository) {
         this.measurementRepository = measurementRepository;
+    }
+
+    public List<Measurement> findAll() {
+        return measurementRepository.findAll();
     }
 
     public Measurement findById(Long id) {
@@ -29,5 +34,10 @@ public class MeasurementService {
     public Measurement save(Measurement measurement) {
         measurement.setCreatedAt(LocalDateTime.now());
         return measurementRepository.save(measurement);
+    }
+
+    public int getRainyDaysCount() {
+        List<Measurement> measurements = measurementRepository.getMeasurementByRaining(true);
+        return measurements.size();
     }
 }

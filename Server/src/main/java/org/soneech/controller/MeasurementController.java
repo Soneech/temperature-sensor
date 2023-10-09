@@ -2,6 +2,7 @@ package org.soneech.controller;
 
 import jakarta.validation.Valid;
 import org.soneech.dto.MeasurementRequestDTO;
+import org.soneech.dto.MeasurementResponseDTO;
 import org.soneech.exception.SensorException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.Measurement;
@@ -9,11 +10,9 @@ import org.soneech.service.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.soneech.util.ErrorUtils.prepareFieldsErrorMessage;
@@ -28,6 +27,24 @@ public class MeasurementController {
     public MeasurementController(MeasurementService measurementService, DefaultMapper mapper) {
         this.measurementService = measurementService;
         this.mapper = mapper;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MeasurementResponseDTO>> getAllMeasurements() {
+        return ResponseEntity.ok(
+                measurementService.findAll().stream()
+                        .map(mapper::convertMeasurementToDTO).toList()
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MeasurementResponseDTO> getMeasurementById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(mapper.convertMeasurementToDTO(measurementService.findById(id)));
+    }
+
+    @GetMapping("/rainyDaysCount")
+    public ResponseEntity<Map<String, Integer>> getRainyDaysCount() {
+        return ResponseEntity.ok(Map.of("rainy_days", measurementService.getRainyDaysCount()));
     }
 
     @PostMapping("/add")
