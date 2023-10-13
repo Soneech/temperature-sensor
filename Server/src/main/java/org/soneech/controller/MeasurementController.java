@@ -8,6 +8,7 @@ import org.soneech.exception.SensorException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.Measurement;
 import org.soneech.service.MeasurementService;
+import org.soneech.util.ValidList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +62,7 @@ public class MeasurementController {
     }
 
     @PostMapping("/addAll")
-    public ResponseEntity<?> saveAllMeasurements(@RequestBody @Valid List<MeasurementRequestDTO> measurementsRequestDTO,
+    public ResponseEntity<?> saveAllMeasurements(@RequestBody @Valid ValidList<MeasurementRequestDTO> measurementsRequestDTO,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(Map.of("message", prepareFieldsErrorMessage(bindingResult)));
