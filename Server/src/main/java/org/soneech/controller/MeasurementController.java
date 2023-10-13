@@ -3,6 +3,7 @@ package org.soneech.controller;
 import jakarta.validation.Valid;
 import org.soneech.dto.MeasurementRequestDTO;
 import org.soneech.dto.MeasurementResponseDTO;
+import org.soneech.exception.MeasurementException;
 import org.soneech.exception.SensorException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.Measurement;
@@ -39,7 +40,8 @@ public class MeasurementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MeasurementResponseDTO> getMeasurementById(@PathVariable("id") Long id) {
+    public ResponseEntity<MeasurementResponseDTO> getMeasurementById(@PathVariable("id") Long id)
+            throws MeasurementException {
         return ResponseEntity.ok(mapper.convertMeasurementToDTO(measurementService.findById(id)));
     }
 

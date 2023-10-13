@@ -10,11 +10,11 @@ import java.util.Map;
 public class DefaultAdvice {
     @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleSensorException(SensorException exception) {
-        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
+        return new ResponseEntity<>(Map.of("message", exception.getMessage()), exception.getStatus());
     }
 
     @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleMeasurementException(MeasurementException exception) {
-        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
+        return new ResponseEntity<>(Map.of("message", exception.getMessage()), exception.getStatus());
     }
 }

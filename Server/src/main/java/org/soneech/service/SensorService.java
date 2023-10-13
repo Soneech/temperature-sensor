@@ -2,9 +2,9 @@ package org.soneech.service;
 
 import org.soneech.exception.SensorException;
 import org.soneech.model.Sensor;
-import org.soneech.repository.MeasurementRepository;
 import org.soneech.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +15,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SensorService {
     private final SensorRepository sensorRepository;
-    private final MeasurementRepository measurementRepository;
-
 
     @Autowired
-    public SensorService(SensorRepository sensorRepository, MeasurementRepository measurementRepository) {
+    public SensorService(SensorRepository sensorRepository) {
         this.sensorRepository = sensorRepository;
-        this.measurementRepository = measurementRepository;
     }
 
     public List<Sensor> findAll() {
@@ -31,7 +28,7 @@ public class SensorService {
     public Sensor findById(Long id) {
         Optional<Sensor> foundSensor = sensorRepository.findById(id);
         if (foundSensor.isEmpty())
-            throw new SensorException("сенсор с таким id не зарегистрирован");
+            throw new SensorException("сенсор с таким id не зарегистрирован", HttpStatus.NOT_FOUND);
 
         return foundSensor.get();
     }

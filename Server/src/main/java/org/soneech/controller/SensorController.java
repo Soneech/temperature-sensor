@@ -9,6 +9,7 @@ import org.soneech.model.Sensor;
 import org.soneech.service.SensorService;
 import org.soneech.util.SensorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class SensorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SensorResponseDTO> getSensorById(@PathVariable("id") Long id) {
+    public ResponseEntity<SensorResponseDTO> getSensorById(@PathVariable("id") Long id) throws SensorException {
         return ResponseEntity.ok(mapper.convertSensorToDTO(sensorService.findById(id)));
     }
 
@@ -48,7 +49,7 @@ public class SensorController {
         sensorValidator.validate(sensor, bindingResult);
 
         if (bindingResult.hasErrors())
-            throw new SensorException(prepareFieldsErrorMessage(bindingResult));
+            throw new SensorException(prepareFieldsErrorMessage(bindingResult), HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(sensorService.save(sensor));
     }

@@ -7,6 +7,7 @@ import org.soneech.exception.MeasurementException;
 import org.soneech.model.Measurement;
 import org.soneech.repository.MeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,7 @@ public class MeasurementService {
     public Measurement findById(Long id) {
         Optional<Measurement> foundMeasurement = measurementRepository.findById(id);
         if (foundMeasurement.isEmpty())
-            throw new MeasurementException("измерение с таким id не найдено");
+            throw new MeasurementException("измерение с таким id не найдено", HttpStatus.NOT_FOUND);
 
         return foundMeasurement.get();
     }
