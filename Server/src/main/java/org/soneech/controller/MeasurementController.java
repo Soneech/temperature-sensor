@@ -8,6 +8,7 @@ import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.Measurement;
 import org.soneech.service.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +56,16 @@ public class MeasurementController {
 
         Measurement measurement = mapper.convertToMeasurement(measurementRequestDTO);
         return ResponseEntity.ok(measurementService.save(measurement));
+    }
+
+    @PostMapping("/addAll")
+    public ResponseEntity<?> saveAllMeasurements(@RequestBody @Valid List<MeasurementRequestDTO> measurementsRequestDTO,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return ResponseEntity.badRequest().body(Map.of("message", prepareFieldsErrorMessage(bindingResult)));
+
+        List<Measurement> measurements = measurementsRequestDTO.stream().map(mapper::convertToMeasurement).toList();
+        measurementService.saveAll(measurements);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

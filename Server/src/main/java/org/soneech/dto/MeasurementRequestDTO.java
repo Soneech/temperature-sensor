@@ -14,7 +14,7 @@ import lombok.*;
 public class MeasurementRequestDTO {
     @NotNull
     @Max(value = 100, message = "температура не может быть выше 100 градусов")
-    @Min(value = -100, message = "температура не может быть ниже 100 градусов")
+    @Min(value = -100, message = "температура не может быть ниже -100 градусов")
     private Double value;
 
     @NotNull
